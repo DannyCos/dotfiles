@@ -1,0 +1,465 @@
+;==========================================================
+;
+;
+;   ██████╗  ██████╗ ██╗  ██╗   ██╗██████╗  █████╗ ██████╗
+;   ██╔══██╗██╔═══██╗██║  ╚██╗ ██╔╝██╔══██╗██╔══██╗██╔══██╗
+;   ██████╔╝██║   ██║██║   ╚████╔╝ ██████╔╝███████║██████╔╝
+;   ██╔═══╝ ██║   ██║██║    ╚██╔╝  ██╔══██╗██╔══██║██╔══██╗
+;   ██║     ╚██████╔╝███████╗██║   ██████╔╝██║  ██║██║  ██║
+;   ╚═╝      ╚═════╝ ╚══════╝╚═╝   ╚═════╝ ╚═╝  ╚═╝╚═╝  ╚═╝
+;
+;
+;   To learn more about how to configure Polybar
+;   go to https://github.com/polybar/polybar
+;
+;   The README contains a lot of information
+;
+;==========================================================
+
+[colors]
+
+foreground = ${xrdb:foreground:#ffff}
+;foreground = ${xrdb:background:#000}
+background = #0000
+
+;  _                    
+; | |__   __ _ _ __ ___ 
+; | '_ \ / _` | '__/ __|
+; | |_) | (_| | |  \__ \
+; |_.__/ \__,_|_|  |___/
+
+[bar/bar]
+enable-ipc=true
+height = 34
+width = 100%
+;bottom = true
+offset-y = 5
+padding = 5
+
+background = ${colors.background}
+foreground = ${colors.foreground}
+
+line-size = 1
+
+font-0=DejaVuSans:style=Regular:size=12;4
+font-1=SF Pro Display:style=Semibold:size=12;4
+font-2=Material Icons:size=16;6
+font-3=font\-logos:size=16;6
+font-4=Hack Nerd Font:size=16;4
+
+modules-right = alsa backlight battery wlan powermenu
+modules-center = time
+
+; i3
+; modules-left = launcher i3 xwindow
+; scroll-up = i3wm-wsnext
+; scroll-down = i3wm-wsprev
+; wm-restack = i3
+
+; bspwm
+modules-left = launcher bspwm xwindow
+scroll-up = bspwm-wsnext
+scroll-down = bspwm-wsprev
+wm-restack = bspwm
+override-redirect = false
+
+
+;                      _       _           
+;  _ __ ___   ___   __| |_   _| | ___  ___ 
+; | '_ ` _ \ / _ \ / _` | | | | |/ _ \/ __|
+; | | | | | | (_) | (_| | |_| | |  __/\__ \
+; |_| |_| |_|\___/ \__,_|\__,_|_|\___||___/
+                                         
+[module/launcher]
+type=custom/text
+content = 
+content-margin = 2
+click-left=launcher
+;The script above is to be found here : https://github.com/ngynLk/scripts
+
+[module/updates]
+type=custom/script
+exec = yay -Qu | wc -l
+exec-if = [[ $(yay -Qu | wc -l) != 0 ]]
+format =   <label> update(s) available.
+format-margin = 8
+tail = true
+interval = 30
+click-left = xterm -e yay -Syu
+
+[module/xwindow]
+type = internal/xwindow
+label = %title:0:75:...%
+label-empty = Empty 
+label-empty-font = 2
+label-font = 2
+format-margin = 4
+
+[module/bspwm]
+type = internal/bspwm
+format = <label-state>
+format-margin = 4
+index-sort = true
+
+enable-click = true
+reverse-scroll = false
+enable-scroll = true
+
+label-focused = %index%
+label-focused-underline = ${colors.foreground}
+label-focused-padding = 4
+label-focused-font = 2
+
+label-empty =
+
+label-occupied = %index%
+label-occupied-padding = 4
+
+;ws-icon-0 = 1;
+;ws-icon-1 = 2;
+;ws-icon-2 = 3;
+;ws-icon-9 = 10;
+;ws-icon-default = 
+
+[module/wlan]
+type = internal/network
+interface = wlp1s0
+interval = 3.0
+
+format-connected-padding = 2
+
+format-connected =  <label-connected>
+label-connected = %essid%
+label-connected-color1 = ${colors.color1}
+
+format-disconnected-padding = 2
+
+format-disconnected =  <label-disconnected>
+label-disconnected = %ifname%
+label-disconnected-color1 = ${colors.color1}
+
+[module/time]
+type = internal/date
+interval = 10
+format-margin = 4
+
+time = "%H:%M"
+time-alt = "%H:%M"
+
+date = "%a %d %b"
+date-alt = "%F"
+
+label = %time% | %date%
+label-background = ${colors.background}
+label-padding = 2
+
+[module/backlight]
+type = internal/backlight
+
+; Use the following command to list available cards:
+; $ ls -1 /sys/class/backlight/
+card = amdgpu_bl0
+
+; Enable changing the backlight with the scroll wheel
+; NOTE: This may require additional configuration on some systems. Polybar will
+; write to `/sys/class/backlight/${self.card}/brightness` which requires polybar
+; to have write access to that file.
+; DO NOT RUN POLYBAR AS ROOT. 
+; The recommended way is to add the user to the
+; `video` group and give that group write-privileges for the `brightness` file.
+; See the ArchWiki for more information:
+; https://wiki.archlinux.org/index.php/Backlight#ACPI
+; Default: false
+enable-scroll = true
+
+format-padding = 2
+
+; Available tags:
+;   <label> (default)
+;   <ramp>
+;   <bar>
+format = %{T5}<ramp> %{T-}<label>
+
+; Available tokens:
+;   %percentage% (default)
+label = %percentage%%
+; 
+; Only applies if <ramp> is used
+ramp-14 = 
+ramp-13 = 
+ramp-12 = 
+ramp-11 = 
+ramp-10 = 
+ramp-9 = 
+ramp-8 = 
+ramp-7 = 
+ramp-6 = 
+ramp-5 = 
+ramp-4 = 
+ramp-3 = 
+ramp-2 = 
+ramp-1 = 
+ramp-0 = 
+
+; Only applies if <bar> is used
+bar-width = 10
+bar-indicator = |
+bar-fill = ─
+bar-empty = ─
+
+[module/alsa]
+type = internal/alsa
+
+; Soundcard to be used
+; Usually in the format hw:# where # is the card number
+; You can find the different card numbers in `/proc/asound/cards`
+master-soundcard = default
+
+; Name of the master, speaker and headphone mixers
+; Use the following command to list available mixer controls:
+; $ amixer scontrols | sed -nr "s/.*'([[:alnum:]]+)'.*/\1/p"
+; If master, speaker or headphone-soundcard isn't the default, 
+; use `amixer -c # scontrols` instead where # is the number 
+; of the master, speaker or headphone soundcard respectively
+;
+; Default: Master
+master-mixer = Master
+
+; Optionally define speaker and headphone mixers
+; Default: none
+; speaker-mixer = Speaker
+; Default: none
+; headphone-mixer = Headphone
+
+; NOTE: This is required if headphone_mixer is defined
+; Use the following command to list available device controls
+; $ amixer controls | sed -r "/CARD/\!d; s/.*=([0-9]+).*name='([^']+)'.*/printf '%3.0f: %s\n' '\1' '\2'/e" | sort
+; You may also need to use `amixer -c # controls` as above for the mixer names
+; Default: none
+; headphone-id = 9
+
+; Use volume mapping (similar to amixer -M and alsamixer), where the increase in volume is linear to the ear
+; Default: false
+mapped = true
+
+; Interval for volume increase/decrease (in percent points)
+; Default: 5
+interval = 3
+
+format-volume-padding = 2
+format-muted-padding = 2
+
+; Available tags:
+;   <label-volume> (default)
+;   <ramp-volume>
+;   <bar-volume>
+format-volume = <ramp-volume>  <label-volume>
+
+; Available tags:
+;   <label-muted> (default)
+;   <ramp-volume>
+;   <bar-volume>
+format-muted = <label-muted>  0%
+
+; Available tokens:
+;   %percentage% (default)
+;label-volume = %percentage%%
+
+; Available tokens:
+;   %percentage% (default)
+label-muted = 婢
+; 墳奔婢    
+; Only applies if <ramp-volume> is used
+ramp-volume-0 = 奔
+ramp-volume-1 = 墳
+
+[module/battery]
+type = internal/battery
+
+; This is useful in case the battery never reports 100% charge
+full-at = 99
+
+; Use the following command to list batteries and adapters:
+; $ ls -1 /sys/class/power_supply/
+battery = BAT0
+adapter = ACAD
+
+; If an inotify event haven't been reported in this many
+; seconds, manually poll for new values.
+;
+; Needed as a fallback for systems that don't report events
+; on sysfs/procfs.
+;
+; Disable polling by setting the interval to 0.
+;
+; Default: 5
+poll-interval = 5
+
+; see "man date" for details on how to format the time string
+; NOTE: if you want to use syntax tags here you need to use %%{...}
+; Default: %H:%M:%S
+time-format = %H:%M
+
+format-charging-padding = 2
+format-discharging-padding = 2
+format-full-padding = 2
+
+; Available tags:
+;   <label-charging> (default)
+;   <bar-capacity>
+;   <ramp-capacity>
+;   <animation-charging>
+format-charging = <animation-charging>  <label-charging>
+
+; Available tags:
+;   <label-discharging> (default)
+;   <bar-capacity>
+;   <ramp-capacity>
+;   <animation-discharging>
+format-discharging = <ramp-capacity> <label-discharging> 
+
+; Available tags:
+;   <label-full> (default)
+;   <bar-capacity>
+;   <ramp-capacity>
+format-full = <ramp-capacity> <label-full>
+
+; Available tokens:
+;   %percentage% (default) - is set to 100 if full-at is reached
+;   %percentage_raw%
+;   %time%
+;   %consumption% (shows current charge rate in watts)
+label-charging = %percentage%%
+
+; Available tokens:
+;   %percentage% (default) - is set to 100 if full-at is reached
+;   %percentage_raw%
+;   %time%
+;   %consumption% (shows current discharge rate in watts)
+label-discharging = %percentage%%
+
+; Available tokens:
+;   %percentage% (default) - is set to 100 if full-at is reached
+;   %percentage_raw%
+label-full = 100%
+; 
+; Only applies if <ramp-capacity> is used
+ramp-capacity-0 = 
+ramp-capacity-1 = 
+ramp-capacity-2 = 
+ramp-capacity-3 = 
+ramp-capacity-4 = 
+ramp-capacity-5 = 
+ramp-capacity-6 = 
+ramp-capacity-7 = 
+ramp-capacity-8 = 
+ramp-capacity-9 = 
+ramp-capacity-10 = 
+ramp-capacity-11 = 
+
+; Only applies if <bar-capacity> is used
+bar-capacity-width = 10
+; 
+; Only applies if <animation-charging> is used
+animation-charging-0 = 
+animation-charging-1 = 
+animation-charging-2 = 
+animation-charging-3 = 
+animation-charging-4 = 
+animation-charging-5 = 
+animation-charging-6 = 
+
+; Framerate in milliseconds
+animation-charging-framerate = 750
+
+; Only applies if <animation-discharging> is used
+animation-discharging-0 = 
+animation-discharging-1 = 
+animation-discharging-2 = 
+animation-discharging-3 = 
+animation-discharging-4 = 
+; Framerate in milliseconds
+animation-discharging-framerate = 500
+
+[module/mpd]
+type = internal/mpd
+format-online-margin = 6
+label-song-maxlen = 48
+label-song = "%artist%: %title%"
+format-online = " %{A1:xterm -e ncmpcpp:}<label-song>%{A}    <icon-prev><toggle><icon-next>"
+
+icon-play = 
+icon-pause = 
+icon-prev = 
+icon-next = 
+
+[module/temperature]
+type = internal/temperature
+thermal-zone = 0
+warn-temperature = 60
+
+format =  <label>
+format-warn = <ramp> <label-warn>
+
+label = %temperature-c%
+label-warn = %temperature-c%
+label-warn-color1 = ${colors.secondary}
+
+ramp-0 = 
+ramp-1 = 
+ramp-2 = 
+
+[module/powermenu]
+type = custom/menu
+
+expand-right = false
+
+format-margin = 2
+format-spacing = 2
+
+label-open = 
+label-close = 
+label-separator = |
+
+; reboot
+menu-0-1 = 
+menu-0-1-exec = menu-open-2
+; poweroff
+menu-0-2 = 
+menu-0-2-exec = menu-open-3
+; logout
+menu-0-0 = 
+menu-0-0-exec = menu-open-1
+
+menu-2-0 = 
+menu-2-0-exec = reboot
+
+menu-3-0 = 
+menu-3-0-exec = poweroff
+
+menu-1-0 = 
+menu-1-0-exec = i3-msg exit || openbox --exit
+
+[module/playerctl]
+type = custom/script
+format-margin = 4
+format-prefix = " "
+exec = playerctl_status
+exec-if = [[ "$(playerctl -l)" != "No players found" ]] && echo "0"
+tail = true
+interval = 0
+
+[settings]
+screenchange-reload = true
+;compositing-background = xor
+;compositing-background = screen
+;compositing-foreground = source
+;compositing-border = over
+pseudo-transparency = false
+
+[global/wm]
+margin-top = 0
+margin-bottom = 0
+
+; vim:ft=dosini
+                      

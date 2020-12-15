@@ -1,0 +1,6 @@
+#!/bin/sh
+# lock-screen-timer &
+# timemanager &
+setxkbmap gb
+xsetroot -cursor_name left_ptr
+xset b off

@@ -30,9 +30,16 @@
 (define-key rust-mode-map (kbd "C-c C-c") 'rust-run-clippy)
 (define-key rust-mode-map (kbd "C-c C-w") 'rust-compile)
 
+(global-unset-key (kbd "C-z"))
+
 (defadvice text-scale-increase (around all-buffers (arg) activate)
   (dolist (buffer (buffer-list))
     (with-current-buffer buffer
       ad-do-it)))
 
-(set-frame-font "Hack Nerd Font-14" 14 t)
+(set-frame-font "Hack Nerd Font-12" 12 t)
+
+;; arduino mode
+(require 'cl)
+(autoload 'arduino-mode "arduino-mode" "Arduino editing mode." t)
+(add-to-list 'auto-mode-alist '("\.ino$" . arduino-mode))

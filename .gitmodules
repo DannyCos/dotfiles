@@ -1,3 +1,6 @@
 [submodule ".vim/pack/danny/start/vim-assembly"]
 	path = .vim/pack/danny/start/vim-assembly
 	url = https://github.com/wsdjeg/vim-assembly
+[submodule ".local/share/nvim/site/pack/danny/start/vim-assembly"]
+	path = .local/share/nvim/site/pack/danny/start/vim-assembly
+	url = https://github.com/wsdjeg/vim-assembly
